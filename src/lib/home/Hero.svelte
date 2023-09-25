@@ -1,45 +1,40 @@
 <script>
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Layout, User } from 'lucide-svelte';
+	import { PackageSearch,Layout } from 'lucide-svelte';
 
-	let herosec = {
-		title: 'Simple SvelteKit Auth',
-		subtitle: 'Lucia - Shadcn - Drizzle ORM',
-		subtext: 'Hello People, This is a simple SvelteKit Auth Template',
-		btn1: 'Dashboard',
-		btn2: 'Log In'
+	let hero = {
+		img: 'https://images.pexels.com/photos/16540118/pexels-photo-16540118/free-photo-of-habba-khatoon-mountain-jammu-and-kashmir.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+		title: 'Jammu & Kashmir Products',
+		subtext: `Its diverse range of products reflects the region's rich natural resources and artistic heritage`,
+		btn1: 'Download',
+		btn2: 'Write Your Today'
 	};
 </script>
 
-<section class="bg-gray-50">
-	<div class="mx-auto max-w-screen-xl px-4 py-20 lg:flex lg:h-[90vh] lg:items-center">
-		<div class="mx-auto max-w-3xl text-center">
-			<h1 class="text-3xl font-extrabold sm:text-5xl">
-				{herosec.title}
-				<strong class="font-extrabold text-blue-600 sm:block md:my-4">
-					{herosec.subtitle}
-				</strong>
-			</h1>
-
-			<p class="mt-4 sm:text-xl/relaxed text-gray-600 font-light">
-				{herosec.subtext}
-			</p>
-
-			<div class="mt-8 flex flex-wrap justify-center gap-4">
-				<Button size="lg" class="lg:px-16" href="/dashboard">
-					<Layout size="19" strokeWidth="1.8" class="mr-2" />
-					{herosec.btn1}</Button
-				>
-				<Button
-					href="/login"
-					size="lg"
-					class="lg:px-16 border-slate-700 hover:bg-primary hover:text-primary-foreground"
-					variant="outline"
-				>
-					<User size="19" strokeWidth="1.8" class="mr-2" />
-					{herosec.btn2}</Button
-				>
+<div class="bg-gray-900">
+	<div class="relative isolate overflow-hidden">
+		<img
+			src={hero.img}
+			alt="Background"
+			class="absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-80 contrast-100"
+		/>
+		<div class="mx-auto max-w-3xl py-32 sm:py-48 lg:py-40">
+			<div
+				class="text-center md:border md:border-white px-2 md:p-8 md:backdrop-blur-sm md:hover:backdrop-blur-md transition-all duration-500 md:shadow-lg md:shadow-gray-800/80 rounded-md md:bg-gray-900/20"
+			>
+				<h1 class="text-4xl font-bold tracking-tight text-white drop-shadow-md sm:text-6xl">
+					{hero.title}
+				</h1>
+				<p class="mt-6 text-lg leading-8 text-gray-100 drop-shadow-md">
+					{hero.subtext}
+				</p>
+				<div class="mt-10 flex items-center justify-center md:gap-x-6 flex-wrap gap-3">
+					<Button variant="outline" class='font-semibold hover:text-blue-600' href="/products"
+						><PackageSearch class="mr-2" strokeWidth="1.4" /> Products</Button
+					>
+					<Button variant="outline" class='font-semibold hover:text-blue-600' href="/dashboard"> <Layout  class="mr-2" strokeWidth="1.4"/> Dashboard</Button>
+				</div>
 			</div>
 		</div>
 	</div>
-</section>
+</div>
