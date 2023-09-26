@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Logo from '$lib/images/logo.png';
+	import { slide, fade } from 'svelte/transition';
 	let nav = {
 		title: 'Svelte Tailwinds',
 		img: Logo,
@@ -22,20 +23,6 @@
 		]
 	};
 
-	let profileNavs = [
-		{
-			name: 'Your Profile',
-			link: '/'
-		},
-		{
-			name: 'Settings',
-			link: '/'
-		},
-		{
-			name: 'Sign out',
-			link: '/'
-		}
-	];
 	$: isActive = $page.route.id?.split('/')[1];
 
 	let isProfileMenu = false;
@@ -53,47 +40,52 @@
 					<!-- Mobile menu button -->
 					<button
 						type="button"
-						class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+						class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none transition-all duration-150"
 						aria-controls="mobile-menu"
 						aria-expanded="false"
 						on:click={() => (isMobileMenu = !isMobileMenu)}
 					>
 						<span class="absolute -inset-0.5" />
 						<span class="sr-only">Open main menu</span>
-						<!--
-                  Icon when menu is closed.
-    
-                  Menu open: "hidden", Menu closed: "block"
-                -->
-						<svg
-							class="{isMobileMenu ? 'hidden' : 'block'} h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							aria-hidden="true"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-							/>
-						</svg>
+						{#if !isMobileMenu}
+							<svg
+								in:fade
+								class="{isMobileMenu
+									? 'hidden'
+									: 'block text-gray-700 outline-none border-none'} h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+								/>
+							</svg>
+							<!-- content here -->
+						{/if}
 						<!--
                   Icon when menu is open.
     
                   Menu open: "block", Menu closed: "hidden"
                 -->
-						<svg
-							class="{isMobileMenu ? 'block' : 'hidden'} h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							aria-hidden="true"
-						>
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-						</svg>
+						{#if isMobileMenu}
+							<svg
+								in:fade
+								class="{isMobileMenu ? 'block' : 'hidden'} h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+							<!-- content here -->
+						{/if}
 					</button>
 				</div>
 				<div class="flex flex-shrink-0 items-center">
@@ -135,16 +127,20 @@
 
 	<!-- Mobile menu, show/hide based on menu state. -->
 	<div class="md:hidden {isMobileMenu ? 'block' : 'hidden'}" id="mobile-menu">
-		<div class="space-y-1 pb-3 pt-2">
-			{#each nav.listnavs as item}
-				<a
-					href={item.link}
-					class="{isActive === item.link.split('/')[1]
-						? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-						: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6"
-					>{item.name}</a
-				>
-			{/each}
-		</div>
+		{#if isMobileMenu}
+			<div class="space-y-1 pb-3 pt-2" in:slide={{ duration: 500 }} out:fade>
+				<!-- content here -->
+				{#each nav.listnavs as item}
+					<a
+						href={item.link}
+						on:click={() => (isMobileMenu = !isMobileMenu)}
+						class="{isActive === item.link.split('/')[1]
+							? 'bg-indigo-50 border-indigo-500 text-indigo-700'
+							: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6"
+						>{item.name}</a
+					>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </nav>
