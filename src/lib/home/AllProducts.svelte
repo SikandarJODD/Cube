@@ -38,7 +38,7 @@
 			<!-- product - start -->
 			{#each allitems as item}
 				<div class="border border-slate-800 rounded-xl overflow-hidden h-fit group">
-					<a href="#" class="group relative block h-96 overflow-hidden rounded-t-lg bg-gray-100">
+					<a href="/products/{item.id}" class="group relative block h-96 overflow-hidden rounded-t-lg bg-gray-100">
 						<img
 							src={item.pic_url}
 							loading="lazy"
@@ -50,7 +50,7 @@
 					<div class="flex items-start justify-between  gap-2 rounded-b-lg bg-gray-100 p-4">
 						<div class="flex flex-col">
 							<a
-								href="#"
+								href="/products/{item.id}"
 								class="font-bold text-gray-800 transition duration-100 hover:text-gray-500 lg:text-md line-clamp-2 group-hover:text-gray-950"
 								>{item.product_name}</a
 							>

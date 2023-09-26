@@ -24,14 +24,14 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { fly, fade } from 'svelte/transition';
 	let submitedData = async () => {
-		// console.log(product);
-		// let allimgs = product.imgs.split(',');
-		// let allimgsarr: any = [];
-		// allimgs.forEach((img) => {
-		// 	allimgsarr.push(img.trim());
-		// });
-		// product.imgs = allimgsarr;
-		// const { data, error } = await supabase.from('products').insert([product]);
+		console.log(product);
+		let allimgs = product.imgs.split(',');
+		let allimgsarr: any = [];
+		allimgs.forEach((img) => {
+			allimgsarr.push(img.trim());
+		});
+		product.imgs = allimgsarr;
+		const { data, error } = await supabase.from('products').insert([product]);
 		isPop = true;
 
 		setTimeout(() => {
@@ -177,7 +177,11 @@
 	</form>
 </Card.Root>
 {#if isPop}
-	<div in:fly={{ x: 30, duration: 300 }} out:fly={{ x: 30, duration: 700 }} class="relative hidden md:flex">
+	<div
+		in:fly={{ x: 30, duration: 300 }}
+		out:fly={{ x: 30, duration: 700 }}
+		class="relative hidden md:flex"
+	>
 		<Alert.Root class="border-green-500 absolute -right-28 bottom-[450px] w-96 shadow-md">
 			<CheckCheck strokeWidth="1.4" size="22" />
 			<Alert.Title>Uploaded Successfully!</Alert.Title>
