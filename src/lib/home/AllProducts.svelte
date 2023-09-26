@@ -11,7 +11,9 @@
 			allitems = data;
 		}
 	});
-	$: console.log(allitems);
+	import { setupViewTransition } from 'sveltekit-view-transition';
+
+	const { transition } = setupViewTransition();
 </script>
 
 <div class="bg-white py-6 sm:py-8 lg:py-12">
@@ -26,19 +28,27 @@
 			>
 				Jammu & Kashmir Products
 			</h2>
-
-			<!-- <p class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-				This is a section of some simple filler text, also known as placeholder text. It shares some
-				characteristics of a real written text but is random or otherwise generated.
-			</p> -->
 		</div>
-		<!-- text - end -->
 
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-6">
 			<!-- product - start -->
 			{#each allitems as item}
-				<div class="border border-slate-800 rounded-xl overflow-hidden h-fit group">
-					<a href="/products/{item.id}" class="group relative block h-96 overflow-hidden rounded-t-lg bg-gray-100">
+				<div
+					class="border border-slate-800 rounded-xl overflow-hidden h-fit group"
+					use:transition={{
+						name: 'title',
+						applyImmediately(navigation) {
+							return navigation?.from?.params?.id === post.id.toString();
+						},
+						shouldApply(navigation) {
+							return navigation?.to?.params?.id === post.id.toString();
+						}
+					}}
+				>
+					<a
+						href="/products/{item.id}"
+						class="group relative block h-96 overflow-hidden rounded-t-lg bg-gray-100"
+					>
 						<img
 							src={item.pic_url}
 							loading="lazy"
@@ -47,17 +57,18 @@
 						/>
 					</a>
 
-					<div class="flex items-start justify-between  gap-2 rounded-b-lg bg-gray-100 p-4">
+					<div class="flex items-start justify-between gap-2 rounded-b-lg bg-gray-100 p-4">
 						<div class="flex flex-col">
 							<a
 								href="/products/{item.id}"
 								class="font-bold text-gray-800 transition duration-100 hover:text-gray-500 lg:text-md line-clamp-2 group-hover:text-gray-950"
 								>{item.product_name}</a
 							>
-							<span class="text-sm text-gray-500 lg:text-base capitalize">by {item.owner_name}</span>
+							<span class="text-sm text-gray-500 lg:text-base capitalize">by {item.owner_name}</span
+							>
 						</div>
 
-						<div class="flex flex-col items-end ">
+						<div class="flex flex-col items-end">
 							<span class="font-bold text-gray-600 lg:text-md group-hover:text-blue-600"
 								>₹{item.prize}.00</span
 							>
