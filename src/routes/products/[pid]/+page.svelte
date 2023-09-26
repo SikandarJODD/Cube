@@ -1,7 +1,10 @@
 <script>
+	import { scale, fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import supabase from '$lib';
 	import { onMount } from 'svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { ShoppingCart } from 'lucide-svelte';
 
 	$: routeid = $page.params.pid;
 	$: product = {
@@ -21,6 +24,9 @@
 		product = data;
 		product.imgs = JSON.parse(data.imgs);
 	});
+
+	let selectid = 'M';
+	$: imgSelect = product.pic_url;
 </script>
 
 <div class="bg-white py-6 sm:py-8 lg:py-12">
@@ -28,13 +34,16 @@
 		<div class="grid gap-8 md:grid-cols-2">
 			<!-- images - start -->
 			<div class="space-y-4">
-				<div class="relative overflow-hidden rounded-lg bg-gray-100">
-					<img
-						src={product.pic_url}
-						loading="lazy"
-						alt={product.product_name}
-						class="h-full w-full object-cover object-center"
-					/>
+				<div class="relative overflow-hidden rounded-lg">
+					{#key imgSelect}
+						<img
+							in:fade={{ duration: 200 }}
+							src={imgSelect}
+							loading="lazy"
+							alt={product.product_name}
+							class="h-full w-full object-cover object-center contrast-125 hover:scale-110 duration-300 transition-all"
+						/>
+					{/key}
 
 					<span
 						class="absolute left-0 top-0 rounded-br-lg bg-red-500 px-3 py-1.5 text-sm uppercase tracking-wider text-white"
@@ -44,7 +53,12 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div class="overflow-hidden rounded-lg bg-gray-100">
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 						<img
+							on:click={() => {
+								imgSelect = product.imgs[0];
+							}}
 							src={product.imgs[0]}
 							loading="lazy"
 							alt={product.product_name}
@@ -53,11 +67,16 @@
 					</div>
 
 					<div class="overflow-hidden rounded-lg bg-gray-100">
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 						<img
+							on:click={() => {
+								imgSelect = product.imgs[1];
+							}}
 							src={product.imgs[1]}
 							loading="lazy"
 							alt={product.product_name}
-							class="h-full w-full object-cover object-center"
+							class="h-full w-full object-cover object-center contrast-125"
 						/>
 					</div>
 				</div>
@@ -133,41 +152,8 @@
 					</div>
 
 					<span class="ml-2 text-sm text-gray-500">4.2</span>
-
-					<a
-						href="/products/{product.id}"
-						class="ml-4 text-sm font-semibold text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700"
-						>view all 47 reviews</a
-					>
 				</div>
 				<!-- rating - end -->
-
-				<!-- color - start -->
-				<div class="mb-4 md:mb-6">
-					<span class="mb-3 inline-block text-sm font-semibold text-gray-500 md:text-base"
-						>Color</span
-					>
-
-					<div class="flex flex-wrap gap-2">
-						<span
-							class="h-8 w-8 rounded-full border bg-gray-800 ring-2 ring-gray-800 ring-offset-1 transition duration-100"
-						/>
-						<button
-							type="button"
-							class="h-8 w-8 rounded-full border bg-gray-500 ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200"
-						/>
-						<button
-							type="button"
-							class="h-8 w-8 rounded-full border bg-gray-200 ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200"
-						/>
-						<button
-							type="button"
-							class="h-8 w-8 rounded-full border bg-white ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200"
-						/>
-					</div>
-				</div>
-				<!-- color - end -->
-
 				<!-- size - start -->
 				<div class="mb-8 md:mb-10">
 					<span class="mb-3 inline-block text-sm font-semibold text-gray-500 md:text-base"
@@ -176,27 +162,55 @@
 
 					<div class="flex flex-wrap gap-3">
 						<button
+							on:click={() => {
+								selectid = 'XS';
+							}}
 							type="button"
-							class="flex h-8 w-12 items-center justify-center rounded-md border bg-white text-center text-sm font-semibold text-gray-800 transition duration-100 hover:bg-gray-100 active:bg-gray-200"
+							class="{selectid === 'XS'
+								? 'bg-primary text-white'
+								: 'bg-white text-gray-800'} flex h-8 w-12 items-center justify-center rounded-md borde text-center text-sm font-semibold transition duration-100"
 							>XS</button
 						>
 						<button
+							on:click={() => {
+								selectid = 'S';
+							}}
 							type="button"
-							class="flex h-8 w-12 items-center justify-center rounded-md border bg-white text-center text-sm font-semibold text-gray-800 transition duration-100 hover:bg-gray-100 active:bg-gray-200"
+							class="{selectid === 'S'
+								? 'bg-primary text-white'
+								: ' bg-white text-gray-800 '} flex h-8 w-12 items-center justify-center rounded-md border text-center text-sm font-semibold transition duration-100"
 							>S</button
 						>
-						<span
-							class="flex h-8 w-12 cursor-default items-center justify-center rounded-md border border-indigo-500 bg-indigo-500 text-center text-sm font-semibold text-white"
-							>M</span
-						>
 						<button
+							on:click={() => {
+								selectid = 'M';
+							}}
 							type="button"
-							class="flex h-8 w-12 items-center justify-center rounded-md border bg-white text-center text-sm font-semibold text-gray-800 transition duration-100 hover:bg-gray-100 active:bg-gray-200"
+							class="{selectid === 'M'
+								? 'bg-primary text-white'
+								: 'bg-white text-gray-800'} flex h-8 w-12 items-center justify-center rounded-md border text-center text-sm font-semibold transition duration-100"
+							>M</button
+						>
+
+						<button
+							on:click={() => {
+								selectid = 'L';
+							}}
+							type="button"
+							class="{selectid === 'L'
+								? 'bg-primary text-white'
+								: 'bg-white text-gray-800'} flex h-8 w-12 items-center justify-center rounded-md border text-center text-sm font-semibold transition duration-100"
 							>L</button
 						>
-						<span
-							class="flex h-8 w-12 cursor-not-allowed items-center justify-center rounded-md border border-transparent bg-white text-center text-sm font-semibold text-gray-400"
-							>XL</span
+						<button
+							on:click={() => {
+								selectid = 'XL';
+							}}
+							type="button"
+							class="{selectid === 'XL'
+								? 'bg-primary text-white'
+								: 'bg-white text-gray-800'} flex h-8 w-12 items-center justify-center rounded-md border text-center text-sm font-semibold transition duration-100"
+							>XL</button
 						>
 					</div>
 				</div>
@@ -237,11 +251,11 @@
 
 				<!-- buttons - start -->
 				<div class="flex gap-2.5">
-					<a
-						href="/products/{product.id}"
-						class="inline-block flex-1 rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 sm:flex-none md:text-base"
-						>Add to cart</a
+					<Button size="lg">
+						<ShoppingCart size="1.5em" class="mr-2" />
+						Buy Now</Button
 					>
+					<Button size="lg" variant="outline" class="border-slate-800">Add to Cart</Button>
 
 					<a
 						href="/products/{product.id}"
@@ -266,8 +280,8 @@
 				<!-- buttons - end -->
 
 				<!-- description - start -->
-				<div class="mt-10 md:mt-16 lg:mt-20">
-					<div class="mb-3 text-lg font-semibold text-gray-800">Description</div>
+				<div class="mt-10 md:mt-16 lg:mt-12">
+					<div class="mb-3 text-xl font-semibold text-gray-800">Description</div>
 
 					<p class="text-gray-500">
 						{product.desc}
